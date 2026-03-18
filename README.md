@@ -2,9 +2,33 @@
 
 Proyecto minimo para entender una comunicacion `vsock` entre parent y enclave.
 
+## Estructura
+
+```text
+.
+├── parent/
+│   ├── CMakeLists.txt
+│   └── src/
+└── enclave/
+    ├── CMakeLists.txt
+    ├── Dockerfile
+    ├── proto/
+    └── src/
+```
+
 ## Que hace
 
-El proceso del enclave:
+El parent:
+
+1. Abre un socket `AF_VSOCK`.
+2. Se conecta al CID del enclave y al puerto `5005`.
+3. Construye un `Sum5Request`.
+4. Lo serializa con Protobuf.
+5. Envía el mensaje al enclave.
+6. Lee el `Sum5Response`.
+7. Muestra el resultado por pantalla.
+
+El enclave:
 
 1. Abre un socket `AF_VSOCK`.
 2. Escucha en el puerto `5005` por defecto.
@@ -25,7 +49,7 @@ Respuesta:
 - 4 bytes con la longitud del payload Protobuf
 - payload serializado de `Sum5Response`
 
-El esquema esta en `proto/sum5.proto`.
+El esquema esta en [enclave/proto/sum5.proto](/Users/carloslancha/Desktop/proyecto_imse/nitro-enclave-test/enclave/proto/sum5.proto).
 
 ```proto
 syntax = "proto3";
@@ -53,10 +77,15 @@ cmake -S . -B build
 cmake --build build
 ```
 
+Esto genera:
+
+- `build/parent/sum5_parent`
+- `build/enclave/sum5_enclave`
+
 ## Construir la imagen Docker del enclave
 
 ```bash
-docker build -t sum5-enclave:latest .
+docker build -t sum5-enclave:latest ./enclave
 ```
 
 ## Construir el `.eif` con `nitro-cli`
@@ -67,34 +96,35 @@ nitro-cli build-enclave \
   --output-file sum5-enclave.eif
 ```
 
-## Ejecutar en el enclave
+## Ejecutar el enclave
 
 ```bash
-./build/sum5_enclave
+./build/enclave/sum5_enclave
 ```
 
 O con puerto explicito:
 
 ```bash
-./build/sum5_enclave 5005
+./build/enclave/sum5_enclave 5005
 ```
 
-## Lo que tiene que hacer el parent
+## Ejecutar el parent
 
-El parent debe:
+Uso:
 
-1. Abrir un socket `AF_VSOCK`.
-2. Conectarse al CID del enclave y al puerto `5005`.
-3. Construir un `Sum5Request`.
-4. Serializarlo con Protobuf.
-5. Enviar primero la longitud del payload en 4 bytes big-endian.
-6. Enviar el payload serializado.
-7. Leer 4 bytes de longitud.
-8. Leer el payload y parsearlo como `Sum5Response`.
+```bash
+./build/parent/sum5_parent <enclave_cid> <numero> [puerto]
+```
 
-Si el parent manda `37`, el enclave devolvera `42`.
+Ejemplo:
+
+```bash
+./build/parent/sum5_parent 16 37
+```
+
+Si el enclave esta en el CID `16`, el parent enviara `37` y recibira `42`.
 
 ## Nota
 
-El codigo de este repositorio solo implementa el lado del enclave, que era el objetivo de esta prueba.
 El comando `nitro-cli build-enclave` debe ejecutarse en Linux, tal y como indica la documentacion oficial de AWS.
+En macOS este proyecto compila stubs informativos; el codigo real `vsock` solo se compila en Linux.

@@ -13,7 +13,7 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY CMakeLists.txt README.md ./
+COPY CMakeLists.txt ./
 COPY proto ./proto
 COPY src ./src
 

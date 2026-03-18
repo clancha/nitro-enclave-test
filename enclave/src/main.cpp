@@ -12,7 +12,6 @@
 #include <exception>
 #include <iostream>
 #include <limits>
-#include <optional>
 #include <stdexcept>
 #include <string>
 
@@ -147,6 +146,7 @@ int main(int argc, char** argv) {
         const int server_fd = ::socket(AF_VSOCK, SOCK_STREAM, 0);
         if (server_fd < 0) {
             std::cerr << "No se pudo crear el socket vsock: " << std::strerror(errno) << '\n';
+            google::protobuf::ShutdownProtobufLibrary();
             return EXIT_FAILURE;
         }
 
@@ -158,12 +158,14 @@ int main(int argc, char** argv) {
         if (::bind(server_fd, reinterpret_cast<sockaddr*>(&address), sizeof(address)) < 0) {
             std::cerr << "bind fallo: " << std::strerror(errno) << '\n';
             ::close(server_fd);
+            google::protobuf::ShutdownProtobufLibrary();
             return EXIT_FAILURE;
         }
 
         if (::listen(server_fd, 16) < 0) {
             std::cerr << "listen fallo: " << std::strerror(errno) << '\n';
             ::close(server_fd);
+            google::protobuf::ShutdownProtobufLibrary();
             return EXIT_FAILURE;
         }
 
