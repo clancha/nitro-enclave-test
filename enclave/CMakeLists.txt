@@ -16,7 +16,10 @@ file(MAKE_DIRECTORY ${SUM5_ENCLAVE_PROTO_OUT})
 
 add_library(sum5_enclave_proto ${SUM5_PROTO_FILE})
 target_link_libraries(sum5_enclave_proto PUBLIC protobuf::libprotobuf)
-target_include_directories(sum5_enclave_proto PUBLIC ${SUM5_ENCLAVE_PROTO_OUT})
+target_include_directories(sum5_enclave_proto PUBLIC
+    ${SUM5_ENCLAVE_PROTO_OUT}
+    ${SUM5_ENCLAVE_PROTO_OUT}/proto
+)
 
 protobuf_generate(
     TARGET sum5_enclave_proto
