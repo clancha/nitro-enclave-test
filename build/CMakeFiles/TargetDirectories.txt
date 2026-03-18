@@ -1,0 +1,4 @@
+/Users/carloslancha/Desktop/proyecto_imse/nitro-enclave-test/build/CMakeFiles/sum5_proto.dir
+/Users/carloslancha/Desktop/proyecto_imse/nitro-enclave-test/build/CMakeFiles/sum5_enclave.dir
+/Users/carloslancha/Desktop/proyecto_imse/nitro-enclave-test/build/CMakeFiles/edit_cache.dir
+/Users/carloslancha/Desktop/proyecto_imse/nitro-enclave-test/build/CMakeFiles/rebuild_cache.dir

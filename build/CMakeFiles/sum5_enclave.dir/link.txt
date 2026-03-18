@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/sum5_enclave.dir/src/main_stub.cpp.o -o sum5_enclave  libsum5_proto.a /opt/homebrew/lib/libprotobuf.dylib

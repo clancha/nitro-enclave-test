@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsum5_proto.a CMakeFiles/sum5_proto.dir/proto/sum5.pb.cc.o
+/usr/bin/ranlib libsum5_proto.a
