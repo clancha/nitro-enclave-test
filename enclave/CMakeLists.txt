@@ -11,23 +11,24 @@ find_package(Protobuf REQUIRED)
 set(SUM5_PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto)
 set(SUM5_PROTO_FILE ${SUM5_PROTO_DIR}/sum5.proto)
 set(SUM5_ENCLAVE_PROTO_OUT ${CMAKE_CURRENT_BINARY_DIR}/generated)
+set(SUM5_ENCLAVE_PROTO_SRC ${SUM5_ENCLAVE_PROTO_OUT}/sum5.pb.cc)
+set(SUM5_ENCLAVE_PROTO_HDR ${SUM5_ENCLAVE_PROTO_OUT}/sum5.pb.h)
 
 file(MAKE_DIRECTORY ${SUM5_ENCLAVE_PROTO_OUT})
 
-add_library(sum5_enclave_proto ${SUM5_PROTO_FILE})
-target_link_libraries(sum5_enclave_proto PUBLIC protobuf::libprotobuf)
-target_include_directories(sum5_enclave_proto PUBLIC
-    ${SUM5_ENCLAVE_PROTO_OUT}
-    ${SUM5_ENCLAVE_PROTO_OUT}/proto
+add_custom_command(
+    OUTPUT ${SUM5_ENCLAVE_PROTO_SRC} ${SUM5_ENCLAVE_PROTO_HDR}
+    COMMAND ${Protobuf_PROTOC_EXECUTABLE}
+        --proto_path=${SUM5_PROTO_DIR}
+        --cpp_out=${SUM5_ENCLAVE_PROTO_OUT}
+        ${SUM5_PROTO_FILE}
+    DEPENDS ${SUM5_PROTO_FILE}
+    VERBATIM
 )
 
-protobuf_generate(
-    TARGET sum5_enclave_proto
-    LANGUAGE cpp
-    PROTOS ${SUM5_PROTO_FILE}
-    IMPORT_DIRS ${SUM5_PROTO_DIR}
-    PROTOC_OUT_DIR ${SUM5_ENCLAVE_PROTO_OUT}
-)
+add_library(sum5_enclave_proto ${SUM5_ENCLAVE_PROTO_SRC} ${SUM5_ENCLAVE_PROTO_HDR})
+target_link_libraries(sum5_enclave_proto PUBLIC protobuf::libprotobuf)
+target_include_directories(sum5_enclave_proto PUBLIC ${SUM5_ENCLAVE_PROTO_OUT})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_executable(sum5_enclave
