@@ -18,21 +18,17 @@ protobuf_generate(
     PROTOS proto/sum5.proto
 )
 
-add_executable(sum5_enclave
-    src/main_stub.cpp
-)
-
-target_link_libraries(sum5_enclave PRIVATE sum5_proto)
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_sources(sum5_enclave PRIVATE
+    add_executable(sum5_enclave
         src/main.cpp
     )
 else()
-    target_compile_definitions(sum5_enclave PRIVATE
-        SUM5_ENCLAVE_UNSUPPORTED_PLATFORM=1
+    add_executable(sum5_enclave
+        src/main_stub.cpp
     )
 endif()
+
+target_link_libraries(sum5_enclave PRIVATE sum5_proto)
 
 target_compile_options(sum5_enclave PRIVATE
     -Wall

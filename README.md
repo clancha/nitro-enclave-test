@@ -53,6 +53,20 @@ cmake -S . -B build
 cmake --build build
 ```
 
+## Construir la imagen Docker del enclave
+
+```bash
+docker build -t sum5-enclave:latest .
+```
+
+## Construir el `.eif` con `nitro-cli`
+
+```bash
+nitro-cli build-enclave \
+  --docker-uri sum5-enclave:latest \
+  --output-file sum5-enclave.eif
+```
+
 ## Ejecutar en el enclave
 
 ```bash
@@ -83,3 +97,4 @@ Si el parent manda `37`, el enclave devolvera `42`.
 ## Nota
 
 El codigo de este repositorio solo implementa el lado del enclave, que era el objetivo de esta prueba.
+El comando `nitro-cli build-enclave` debe ejecutarse en Linux, tal y como indica la documentacion oficial de AWS.
