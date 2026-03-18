@@ -1,2 +1,0 @@
-# Hashes of file build rules.
-33416092b23c113d05426c6680766c9f proto/sum5.pb.h
