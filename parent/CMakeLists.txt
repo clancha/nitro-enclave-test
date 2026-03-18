@@ -8,11 +8,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Protobuf REQUIRED)
 
-set(SUM5_PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../enclave/proto)
+set(SUM5_SHARED_PROTO_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../enclave/proto/sum5.proto)
+set(SUM5_PROTO_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto)
 set(SUM5_PROTO_FILE ${SUM5_PROTO_DIR}/sum5.proto)
 set(SUM5_PARENT_PROTO_OUT ${CMAKE_CURRENT_BINARY_DIR}/generated)
 
+file(MAKE_DIRECTORY ${SUM5_PROTO_DIR})
 file(MAKE_DIRECTORY ${SUM5_PARENT_PROTO_OUT})
+configure_file(${SUM5_SHARED_PROTO_FILE} ${SUM5_PROTO_FILE} COPYONLY)
 
 add_library(sum5_parent_proto ${SUM5_PROTO_FILE})
 target_link_libraries(sum5_parent_proto PUBLIC protobuf::libprotobuf)

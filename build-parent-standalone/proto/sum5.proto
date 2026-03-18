@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package nitroenclave;
+
+message Sum5Request {
+  int32 value = 1;
+}
+
+message Sum5Response {
+  int32 result = 1;
+}
