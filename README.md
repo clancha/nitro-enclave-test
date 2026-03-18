@@ -8,6 +8,7 @@ Proyecto minimo para entender una comunicacion `vsock` entre parent y enclave.
 .
 ├── parent/
 │   ├── CMakeLists.txt
+│   ├── Dockerfile
 │   └── src/
 └── enclave/
     ├── CMakeLists.txt
@@ -88,6 +89,14 @@ Esto genera:
 docker build -t sum5-enclave:latest ./enclave
 ```
 
+## Construir la imagen Docker del parent
+
+El `Dockerfile` del parent necesita como contexto la raiz del repo, porque reutiliza el esquema Protobuf de `enclave/proto`.
+
+```bash
+docker build -t sum5-parent:latest -f parent/Dockerfile .
+```
+
 ## Construir el `.eif` con `nitro-cli`
 
 ```bash
@@ -123,6 +132,12 @@ Ejemplo:
 ```
 
 Si el enclave esta en el CID `16`, el parent enviara `37` y recibira `42`.
+
+Con Docker:
+
+```bash
+docker run --rm sum5-parent:latest 16 37
+```
 
 ## Nota
 
