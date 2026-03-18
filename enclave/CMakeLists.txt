@@ -1,6 +1,15 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(sum5_enclave_app LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 find_package(Protobuf REQUIRED)
 
-set(SUM5_PROTO_FILE ${CMAKE_CURRENT_SOURCE_DIR}/proto/sum5.proto)
+set(SUM5_PROTO_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto)
+set(SUM5_PROTO_FILE ${SUM5_PROTO_DIR}/sum5.proto)
 set(SUM5_ENCLAVE_PROTO_OUT ${CMAKE_CURRENT_BINARY_DIR}/generated)
 
 file(MAKE_DIRECTORY ${SUM5_ENCLAVE_PROTO_OUT})
@@ -13,6 +22,7 @@ protobuf_generate(
     TARGET sum5_enclave_proto
     LANGUAGE cpp
     PROTOS ${SUM5_PROTO_FILE}
+    IMPORT_DIRS ${SUM5_PROTO_DIR}
     PROTOC_OUT_DIR ${SUM5_ENCLAVE_PROTO_OUT}
 )
 
